@@ -38,8 +38,9 @@ public class MyNewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<MyNew
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.valueOf(position));
-        holder.mContentView.setText(mValues.get(position).getTitle());
+        holder.mAuteurView.setText(mValues.get(position).getAuthor());
+        holder.mTitleView.setText(mValues.get(position).getTitle());
+        holder.mDateView.setText(mValues.get(position).getPublishedAt());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,20 +61,22 @@ public class MyNewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<MyNew
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mAuteurView;
+        public final TextView mTitleView;
+        public final TextView mDateView;
         public NewsArticle mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mAuteurView = (TextView) view.findViewById(R.id.newsauteur);
+            mTitleView = (TextView) view.findViewById(R.id.newstitre);
+            mDateView = (TextView) view.findViewById(R.id.newsdate);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mTitleView.getText() + "'";
         }
     }
 }

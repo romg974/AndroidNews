@@ -50,7 +50,11 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
 
                                 for(int i = 0; i < receivedArticles.length(); i++){
                                     JSONObject article = receivedArticles.getJSONObject(i);
-                                    frag.addArticle(new NewsArticle(article.getString("title"), "lol"));
+                                    NewsArticle na = new NewsArticle();
+                                    na.setTitle(article.getString("title"));
+                                    na.setAuthor(article.getString("author"));
+                                    na.setPublishedAt(article.getString("publishedAt"));
+                                    frag.addArticle(na);
                                 }
 
                             } catch (JSONException e) {
