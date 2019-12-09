@@ -6,8 +6,9 @@
     android:name="fr.centrale.rom.news.NewsArticleFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="50dp"
+    android:layout_marginRight="4dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".NewsArticleFragment"
     tools:listitem="@layout/fragment_newsarticle" />

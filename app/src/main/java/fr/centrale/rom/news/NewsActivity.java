@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -22,6 +26,8 @@ import java.util.ArrayList;
 
 import fr.centrale.rom.news.dummy.DummyContent;
 import fr.centrale.rom.news.models.NewsArticle;
+import fr.centrale.rom.news.models.NewsSource;
+import fr.centrale.rom.news.models.SourceList;
 
 public class NewsActivity extends AppCompatActivity implements NewsArticleFragment.OnListFragmentInteractionListener {
 
@@ -35,6 +41,26 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
+        Spinner spinner = (Spinner) findViewById(R.id.sourceSpinner);
+
+        ArrayList<CharSequence> sources = new ArrayList<>();
+        SourceList sl = SourceList.getInstance();
+
+        for(int i = 0; i < sl.size(); i++){
+            sources.add(sl.get(i).getName());
+        }
+
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sources);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
         RequestQueue queue = Volley.newRequestQueue(this);
 

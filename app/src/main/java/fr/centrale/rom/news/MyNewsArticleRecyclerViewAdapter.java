@@ -2,9 +2,11 @@ package fr.centrale.rom.news;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.centrale.rom.news.NewsArticleFragment.OnListFragmentInteractionListener;
@@ -42,6 +44,15 @@ public class MyNewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<MyNew
         holder.mTitleView.setText(mValues.get(position).getTitle());
         holder.mDateView.setText(mValues.get(position).getPublishedAt());
 
+        if(position % 2 == 0){
+            holder.mImgDroite.setVisibility(View.GONE);
+            holder.mImgGauche.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.mImgGauche.setVisibility(View.GONE);
+            holder.mImgDroite.setVisibility(View.VISIBLE);
+        }
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +75,8 @@ public class MyNewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<MyNew
         public final TextView mAuteurView;
         public final TextView mTitleView;
         public final TextView mDateView;
+        public final ImageView mImgGauche;
+        public final ImageView mImgDroite;
         public NewsArticle mItem;
 
         public ViewHolder(View view) {
@@ -72,6 +85,8 @@ public class MyNewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<MyNew
             mAuteurView = (TextView) view.findViewById(R.id.newsauteur);
             mTitleView = (TextView) view.findViewById(R.id.newstitre);
             mDateView = (TextView) view.findViewById(R.id.newsdate);
+            mImgGauche = (ImageView) view.findViewById(R.id.imggauche);
+            mImgDroite = (ImageView) view.findViewById(R.id.imgdroite);
         }
 
         @Override

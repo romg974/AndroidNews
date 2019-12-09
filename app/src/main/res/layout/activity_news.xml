@@ -8,4 +8,11 @@
     tools:context=".NewsActivity">
 
 
+    <Spinner
+        android:id="@+id/sourceSpinner"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="1dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

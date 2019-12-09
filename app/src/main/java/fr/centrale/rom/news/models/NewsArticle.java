@@ -1,5 +1,7 @@
 package fr.centrale.rom.news.models;
 
+import java.text.SimpleDateFormat;
+
 public class NewsArticle {
     private String title;
     private String author;
