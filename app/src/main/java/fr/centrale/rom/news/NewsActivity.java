@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,11 +33,11 @@ import fr.centrale.rom.news.models.NewsArticle;
 import fr.centrale.rom.news.models.NewsSource;
 import fr.centrale.rom.news.models.SourceList;
 
-public class NewsActivity extends AppCompatActivity implements NewsArticleFragment.OnListFragmentInteractionListener {
+public class NewsActivity extends AppCompatActivity implements NewsArticleFragment.OnListFragmentInteractionListener, NewsShowFragment.OnFragmentInteractionListener {
 
     //String feedSource = "https://newsapi.org/v2/sources?apiKey=d31f5fa5f03443dd8a1b9e3fde92ec34&language=fr";
     private String feedSource = "https://newsapi.org/v2/everything?apiKey=d31f5fa5f03443dd8a1b9e3fde92ec34&language=fr&sources=";
-    private String actualSource;
+    private NewsSource actualSource;
     private int actualPage;
     private int loadedPage;
 
@@ -46,6 +47,8 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
     private SourceList sl;
 
     private RequestQueue queue;
+
+    private NewsShowFragment nsf;
 
     AlertDialog.Builder boite;
 
@@ -73,7 +76,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                actualSource = sl.get(position).getId();
+                actualSource = sl.get(position);
                 actualPage = 1;
                 loadedPage = 0;
                 frag.clearArticles();
@@ -87,7 +90,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
         });
 
         if(actualSource == null){
-            actualSource = sl.get(0).getId();
+            actualSource = sl.get(0);
         }
 
 
@@ -129,7 +132,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
     }
 
     private void fetchNews(){
-        JsonObjectRequest req = new JsonObjectRequest(feedSource+actualSource+"&page="+actualPage, null,
+        JsonObjectRequest req = new JsonObjectRequest(feedSource+actualSource.getId()+"&page="+actualPage, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -144,6 +147,8 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
                                     na.setTitle(article.getString("title"));
                                     na.setAuthor(article.getString("author"));
                                     na.setPublishedAt(article.getString("publishedAt"));
+                                    na.setDescription(article.getString("description"));
+                                    na.setSource(actualSource);
                                     frag.addArticle(na);
                                 }
 
@@ -171,7 +176,16 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
 
     @Override
     public void onListFragmentInteraction(NewsArticle item) {
-        Log.d("Monlog", "coucou");
+        if(nsf != null){
+            getSupportFragmentManager().beginTransaction().remove(nsf).commit();
+            nsf = null;
+        }
+
+        nsf = NewsShowFragment.newInstance(item);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, nsf)
+                .commit();
     }
 
     @Override
@@ -183,6 +197,19 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
         if(actualPage == loadedPage){
             actualPage++;
             fetchNews();
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentClose() {
+        if(nsf != null){
+            getSupportFragmentManager().beginTransaction().remove(nsf).commit();
+            nsf = null;
         }
     }
 }
