@@ -1,7 +1,9 @@
 package fr.centrale.rom.news;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +47,8 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
 
     private RequestQueue queue;
 
+    AlertDialog.Builder boite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +89,22 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
         if(actualSource == null){
             actualSource = sl.get(0).getId();
         }
+
+
+        ////////////////////////////
+        /// CREATION BOITE RETRY ///
+        ////////////////////////////
+        boite = new AlertDialog.Builder(this);
+        boite.setTitle("Erreur de connexion");
+        boite.setMessage("Les informations n'ont pas pu être récupérées. Assurez vous d'être bien connecté à l'internet mondial puis réessayez.");
+
+        boite.setPositiveButton("Réessayer", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fetchNews();
+            }
+        });
+
 
         //////////////////////////////
         /// GESTION QUEUE REQUETES ///
@@ -141,7 +161,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Monlog", "request err");
-
+                        boite.show();
                     }
                 });
 
@@ -158,6 +178,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
     public void onBottom() {
         if(loadedPage == 5){
             Toast.makeText(this, "La dernière page a été atteinte", Toast.LENGTH_SHORT).show();
+            return;
         }
         if(actualPage == loadedPage){
             actualPage++;
