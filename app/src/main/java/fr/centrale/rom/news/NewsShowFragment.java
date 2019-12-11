@@ -72,7 +72,7 @@ public class NewsShowFragment extends Fragment {
         TextView description = (TextView) view.findViewById(R.id.description);
 
         titre.setText(news.getTitle());
-        date.setText(news.getPublishedAt());
+        date.setText(news.getReadableDate());
         auteur.setText(news.getAuthor());
         description.setText(news.getDescription());
         source.setText(news.getSource().getName());

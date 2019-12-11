@@ -42,7 +42,7 @@ public class MyNewsArticleRecyclerViewAdapter extends RecyclerView.Adapter<MyNew
         holder.mItem = mValues.get(position);
         holder.mAuteurView.setText(mValues.get(position).getAuthor());
         holder.mTitleView.setText(mValues.get(position).getTitle());
-        holder.mDateView.setText(mValues.get(position).getPublishedAt());
+        holder.mDateView.setText(mValues.get(position).getReadableDate());
 
         if(position % 2 == 0){
             holder.mImgDroite.setVisibility(View.GONE);

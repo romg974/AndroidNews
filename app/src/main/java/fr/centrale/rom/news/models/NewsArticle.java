@@ -78,6 +78,13 @@ public class NewsArticle {
         this.publishedAt = publishedAt;
     }
 
+    public String getReadableDate(){
+        if(publishedAt != null){
+            return publishedAt.replace("T", " ").replace("Z", "");
+        }
+        return "";
+    }
+
     public String getContent() {
         return content;
     }
