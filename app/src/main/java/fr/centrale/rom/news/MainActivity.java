@@ -1,7 +1,9 @@
 package fr.centrale.rom.news;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,13 +27,29 @@ import fr.centrale.rom.news.models.SourceList;
 public class MainActivity extends AppCompatActivity {
 
     String feedSource = "https://newsapi.org/v2/sources?apiKey=d31f5fa5f03443dd8a1b9e3fde92ec34&language=fr";
-
+    AlertDialog.Builder boite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        boite = new AlertDialog.Builder(this);
+        boite.setTitle("Erreur de connexion");
+        boite.setMessage("Les informations n'ont pas pu être récupérées. Assurez vous d'être bien connecté à l'internet mondial puis réessayez.");
+
+        boite.setPositiveButton("Réessayer", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fetchSources();
+            }
+        });
+
+        fetchSources();
+    }
+
+    private void fetchSources(){
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonObjectRequest req = new JsonObjectRequest(feedSource, null,
@@ -70,19 +88,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Monlog", "request err");
+                        boite.show();
 
                     }
                 });
 
         queue.add(req);
-
-        Button shownews = (Button)findViewById(R.id.shownews);
-        shownews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, NewsActivity.class);
-                startActivity(i);
-            }
-        });
     }
 }
