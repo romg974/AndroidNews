@@ -32,10 +32,15 @@ import fr.centrale.rom.news.models.SourceList;
 public class NewsActivity extends AppCompatActivity implements NewsArticleFragment.OnListFragmentInteractionListener {
 
     //String feedSource = "https://newsapi.org/v2/sources?apiKey=d31f5fa5f03443dd8a1b9e3fde92ec34&language=fr";
-    String feedSource = "https://newsapi.org/v2/everything?apiKey=d31f5fa5f03443dd8a1b9e3fde92ec34&language=fr&sources=google-news-fr";
+    private String feedSource = "https://newsapi.org/v2/everything?apiKey=d31f5fa5f03443dd8a1b9e3fde92ec34&language=fr&sources=";
+    private String actualSource;
 
     private ArrayList<NewsArticle> articles;
     private NewsArticleFragment frag;
+
+    private SourceList sl;
+
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
         Spinner spinner = (Spinner) findViewById(R.id.sourceSpinner);
 
         ArrayList<CharSequence> sources = new ArrayList<>();
-        SourceList sl = SourceList.getInstance();
+        sl = SourceList.getInstance();
 
         for(int i = 0; i < sl.size(); i++){
             sources.add(sl.get(i).getName());
@@ -55,16 +60,36 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                actualSource = sl.get(position).getId();
+                fetchNews();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
-        RequestQueue queue = Volley.newRequestQueue(this);
+        if(actualSource == null){
+            actualSource = sl.get(0).getId();
+        }
 
-        JsonObjectRequest req = new JsonObjectRequest(feedSource, null,
+        queue = Volley.newRequestQueue(this);
+
+
+        frag = new NewsArticleFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, frag)
+                .commit();
+
+        fetchNews();
+    }
+
+    private void fetchNews(){
+        JsonObjectRequest req = new JsonObjectRequest(feedSource+actualSource, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -102,10 +127,6 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
 
         queue.add(req);
 
-        frag = new NewsArticleFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, frag)
-                .commit();
     }
 
     @Override
