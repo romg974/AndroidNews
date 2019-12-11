@@ -78,6 +78,7 @@ public class NewsShowFragment extends Fragment {
         source.setText(news.getSource().getName());
 
         Button btnClose = (Button) view.findViewById(R.id.close);
+        Button btnUrl = (Button) view.findViewById(R.id.openurl);
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,14 +87,14 @@ public class NewsShowFragment extends Fragment {
             }
         });
 
-        return view;
-    }
+        btnUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onFragmentOpenUrl(news.getUrl());
+            }
+        });
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        return view;
     }
 
     @Override
@@ -125,7 +126,7 @@ public class NewsShowFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentOpenUrl(String url);
         void onFragmentClose();
     }
 }

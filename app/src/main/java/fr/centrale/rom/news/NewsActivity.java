@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,6 +77,11 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(nsf != null){
+                    getSupportFragmentManager().beginTransaction().remove(nsf).commit();
+                    nsf = null;
+                }
+
                 actualSource = sl.get(position);
                 actualPage = 1;
                 loadedPage = 0;
@@ -148,6 +154,7 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
                                     na.setAuthor(article.getString("author"));
                                     na.setPublishedAt(article.getString("publishedAt"));
                                     na.setDescription(article.getString("description"));
+                                    na.setUrl(article.getString("url"));
                                     na.setSource(actualSource);
                                     frag.addArticle(na);
                                 }
@@ -201,8 +208,12 @@ public class NewsActivity extends AppCompatActivity implements NewsArticleFragme
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onFragmentOpenUrl(String url) {
+        Intent intent = new Intent(NewsActivity.this, WebViewActivity.class);
+        Bundle b = new Bundle();
+        b.putString("url", url);
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
     }
 
     @Override
